@@ -1,10 +1,11 @@
-$brand-color: #E34234;   // intense tomato red
-$highlight:           lighten($brand-color, 35%);
+$brand-color: #E34234;
+$highlight: lighten($brand-color, 35%);
 $text-color: #170D0A;
 $muted-text-color: #713A32;
-$font-family:         "EB Garamond", Garamond, "Times New Roman", serif;
 
-$on-bigphone:         375px;
-$on-tablet:           768px;
-$on-laptop:           960px;
-$on-desktop:          1200px;
+$font-family: "EB Garamond", Garamond, "Times New Roman", serif;
+
+$on-bigphone: 375px;
+$on-tablet: 768px;
+$on-laptop: 960px;
+$on-desktop: 1200px;
