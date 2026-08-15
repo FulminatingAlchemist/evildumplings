@@ -1,0 +1,122 @@
+---
+layout: default
+title: Map
+---
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+>
+
+{% include menu.html %}
+
+<main class="home" id="main" role="main" aria-label="Restaurant map">
+
+  <h1 class="content-title divided">
+    Restaurant map
+  </h1>
+
+  <div id="restaurant-map"></div>
+
+</main>
+
+<style>
+  #restaurant-map {
+    width: 100%;
+    height: 70vh;
+    min-height: 500px;
+  }
+
+  .restaurant-popup {
+    font-family: "EB Garamond", Garamond, "Times New Roman", serif;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .restaurant-popup strong {
+    font-size: 1.15rem;
+  }
+
+  .restaurant-rating {
+    margin: 0.4rem 0;
+  }
+</style>
+
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin="">
+</script>
+
+<script>
+  const map = L.map('restaurant-map');
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const markers = [];
+
+  {% assign reviews = site.posts | where: "review", true %}
+
+  {% for post in reviews %}
+    {% if post.restaurant.lat and post.restaurant.lng %}
+
+      {% capture rating_text %}
+        {% if post.rating == -1 %}
+          Not recommended
+        {% elsif post.rating == 0 %}
+          Recommended
+        {% elsif post.rating == 1 %}
+          🥟
+        {% elsif post.rating == 2 %}
+          🥟🥟
+        {% elsif post.rating == 3 %}
+          🥟🥟🥟
+        {% endif %}
+      {% endcapture %}
+
+      {
+        const marker = L.marker([
+          {{ post.restaurant.lat }},
+          {{ post.restaurant.lng }}
+        ]).addTo(map);
+
+        marker.bindPopup(`
+          <div class="restaurant-popup">
+            <strong>{{ post.restaurant.name | escape }}</strong><br>
+            {{ post.restaurant.city | escape }},
+            {{ post.restaurant.country | escape }}
+
+            <div class="restaurant-rating">
+              {{ rating_text | strip }}
+            </div>
+
+            <a href="{{ post.url | relative_url }}">
+              Read review →
+            </a>
+          </div>
+        `);
+
+        markers.push(marker);
+      }
+
+    {% endif %}
+  {% endfor %}
+
+  if (markers.length === 1) {
+    map.setView(markers[0].getLatLng(), 15);
+  } else if (markers.length > 1) {
+    const group = L.featureGroup(markers);
+
+    map.fitBounds(group.getBounds(), {
+      padding: [40, 40],
+      maxZoom: 15
+    });
+  } else {
+    map.setView([52.2297, 21.0122], 12);
+  }
+</script>
