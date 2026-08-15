@@ -16,7 +16,7 @@
 title: evildumplings
 email: evildumplings@protonmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Just me versus the restaurants that serve me food.
+  Eating my way through bad decisions.
 baseurl: "/evildumplings" # the subpath of your site, e.g. /blog
 url: "https://uszko.uk" # the base hostname & protocol for your site, e.g. http://example.com
 icon: /assets/images/icon-512.png
