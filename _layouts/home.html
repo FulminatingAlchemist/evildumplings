@@ -9,12 +9,14 @@ layout: default
 {% else %}
   <header class="site-masthead">
     {% include menu.html %}
+
     {% if site.title %}
       <h1>
         {{ site.title }}
       </h1>
     {% endif %}
-    {% if site.title %}
+
+    {% if site.description %}
       <h2>
         {{ site.description }}
       </h2>
@@ -28,12 +30,12 @@ layout: default
     {% if site.paginate and site.paginate_path and paginator.page > 1 %}
       Page {{ paginator.page }}
     {% else %}
-      Contents
+      {{ page.title | default: "Contents" }}
     {% endif %}
   </h1>
 
   {% if site.paginate and site.paginate_path %}
-    
+
     <ul class="post-list">
       {% for post in paginator.posts %}
         {% include post-list-item.html %}
@@ -41,21 +43,29 @@ layout: default
     </ul>
 
     {% if paginator.total_pages > 1 %}
-
       <div class="post-pagination">
-        {% if paginator.next_page %}
-          <a href="{{ paginator.next_page_path | prepend: site.baseurl  }}" class="pagination-next btn">&lang;&nbsp;Older</a>
-        {% else %}
-          <span>&nbsp;</span>
-        {% endif %}
-        <span class="pagination-number">{{ paginator.page }} of {{ paginator.total_pages }}</span>
-        {% if paginator.previous_page %}
-          <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}" class="pagination-previous btn">Newer&nbsp;&rang;</a>
-        {% else %}
-          <span>&nbsp;</span>
-        {% endif %}
-      </div>
 
+        {% if paginator.next_page %}
+          <a href="{{ paginator.next_page_path | prepend: site.baseurl }}" class="pagination-next btn">
+            &lang;&nbsp;Older
+          </a>
+        {% else %}
+          <span>&nbsp;</span>
+        {% endif %}
+
+        <span class="pagination-number">
+          {{ paginator.page }} of {{ paginator.total_pages }}
+        </span>
+
+        {% if paginator.previous_page %}
+          <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}" class="pagination-previous btn">
+            Newer&nbsp;&rang;
+          </a>
+        {% else %}
+          <span>&nbsp;</span>
+        {% endif %}
+
+      </div>
     {% endif %}
 
   {% else %}
@@ -65,8 +75,7 @@ layout: default
         {% include post-list-item.html %}
       {% endfor %}
     </ul>
-  
+
   {% endif %}
-    
 
 </main>
