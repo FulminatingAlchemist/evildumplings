@@ -22,27 +22,277 @@ title: Map
 
 </main>
 
+
 <style>
+
+  /* =========================
+     MAP
+     ========================= */
+
   #restaurant-map {
     width: 100%;
-    height: 70vh;
+    height: 72vh;
     min-height: 500px;
+
+    border: 3px solid #170D0A;
+    box-sizing: border-box;
+
+    font-family:
+      "EB Garamond",
+      Garamond,
+      "Times New Roman",
+      serif;
   }
 
+
+  /* =========================
+     LEAFLET CONTROLS
+     ========================= */
+
+  .leaflet-bar {
+    border: 2px solid #170D0A !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .leaflet-bar a,
+  .locate-button {
+    background: #FFF1D6 !important;
+    color: #170D0A !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid #170D0A !important;
+
+    border-radius: 0 !important;
+
+    font-family:
+      "EB Garamond",
+      Garamond,
+      "Times New Roman",
+      serif;
+
+    cursor: pointer;
+  }
+
+  .leaflet-bar a:last-child,
+  .locate-button:last-child {
+    border-bottom: 0 !important;
+  }
+
+  .leaflet-bar a:hover,
+  .locate-button:hover {
+    background: #E34234 !important;
+    color: #FFF1D6 !important;
+  }
+
+
+  /* =========================
+     LOCATE BUTTON
+     ========================= */
+
+  .locate-control {
+    margin-top: 10px !important;
+  }
+
+  .locate-button {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    appearance: none;
+  }
+
+  .locate-button svg {
+    width: 18px;
+    height: 18px;
+
+    stroke: currentColor;
+    fill: none;
+
+    stroke-width: 2;
+  }
+
+
+  /* =========================
+     DUMPLING MARKERS
+     ========================= */
+
+  .dumpling-marker {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #E34234;
+
+    border: 2px solid #170D0A;
+    border-radius: 50%;
+
+    box-sizing: border-box;
+  }
+
+  .dumpling-marker svg {
+    width: 32px;
+    height: 32px;
+
+    overflow: visible;
+  }
+
+  .dumpling-body {
+    fill: #FFF1D6;
+    stroke: #170D0A;
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .dumpling-pleat {
+    fill: none;
+    stroke: #170D0A;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+
+  /* =========================
+     USER LOCATION
+     ========================= */
+
+  .user-location-marker {
+    stroke: #170D0A;
+    stroke-width: 3px;
+
+    fill: #FFF1D6;
+    fill-opacity: 1;
+  }
+
+
+  /* =========================
+     POPUPS
+     ========================= */
+
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip {
+    background: #FFF1D6;
+    color: #170D0A;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border: 2px solid #170D0A;
+
+    border-radius: 0;
+
+    box-shadow: none;
+  }
+
+  .leaflet-popup-content {
+    margin: 16px 18px;
+
+    min-width: 160px;
+  }
+
+  .leaflet-popup-tip-container {
+    margin-top: -1px;
+  }
+
+  .leaflet-popup-close-button {
+    color: #170D0A !important;
+
+    font-size: 20px !important;
+
+    top: 3px !important;
+    right: 5px !important;
+  }
+
+
+  /* =========================
+     RESTAURANT POPUP
+     ========================= */
+
   .restaurant-popup {
-    font-family: "EB Garamond", Garamond, "Times New Roman", serif;
+    font-family:
+      "EB Garamond",
+      Garamond,
+      "Times New Roman",
+      serif;
+
     font-size: 1rem;
     line-height: 1.3;
   }
 
   .restaurant-popup strong {
-    font-size: 1.15rem;
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 1.35rem;
+    line-height: 1.05;
+  }
+
+  .restaurant-location {
+    opacity: 0.7;
   }
 
   .restaurant-rating {
-    margin: 0.4rem 0;
+    margin: 10px 0;
+
+    font-size: 1.15rem;
   }
+
+  .restaurant-popup a {
+    color: #E34234;
+
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .restaurant-popup a:hover {
+    color: #170D0A;
+  }
+
+
+  /* =========================
+     ATTRIBUTION
+     ========================= */
+
+  .leaflet-control-attribution {
+    background: #FFF1D6 !important;
+    color: #170D0A !important;
+
+    font-family:
+      "EB Garamond",
+      Garamond,
+      "Times New Roman",
+      serif;
+  }
+
+  .leaflet-control-attribution a {
+    color: #E34234 !important;
+  }
+
+
+  /* =========================
+     MOBILE
+     ========================= */
+
+  @media (max-width: 600px) {
+
+    #restaurant-map {
+      height: 65vh;
+      min-height: 420px;
+    }
+
+  }
+
 </style>
+
 
 <script
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -50,73 +300,461 @@ title: Map
   crossorigin="">
 </script>
 
+
 <script>
+
+  /* =========================
+     CREATE MAP
+     ========================= */
+
   const map = L.map('restaurant-map');
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
 
-  const markers = [];
+  L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }
+  ).addTo(map);
+
+
+
+  /* =========================
+     RESTAURANT DATA
+     ========================= */
 
   {% assign reviews = site.posts | where: "review", true %}
 
-  {% for post in reviews %}
-    {% if post.restaurant.lat and post.restaurant.lng %}
+  const restaurants = [
 
-      {% capture rating_text %}
-        {% if post.rating == -1 %}
-          Not recommended
-        {% elsif post.rating == 0 %}
-          Recommended
-        {% elsif post.rating == 1 %}
-          🥟
-        {% elsif post.rating == 2 %}
-          🥟🥟
-        {% elsif post.rating == 3 %}
-          🥟🥟🥟
-        {% endif %}
-      {% endcapture %}
+    {% for post in reviews %}
 
+      {% if post.restaurant.lat and post.restaurant.lng %}
+
+        {
+          name: {{ post.restaurant.name | jsonify }},
+
+          city: {{ post.restaurant.city | jsonify }},
+
+          country: {{ post.restaurant.country | jsonify }},
+
+          lat: {{ post.restaurant.lat }},
+
+          lng: {{ post.restaurant.lng }},
+
+          rating: {{ post.rating | default: 0 }},
+
+          url: {{ post.url | relative_url | jsonify }}
+        },
+
+      {% endif %}
+
+    {% endfor %}
+
+  ];
+
+
+
+  /* =========================
+     RATING
+     ========================= */
+
+  function ratingLabel(rating) {
+
+    rating = Number(rating);
+
+    if (rating === -1) {
+      return 'Not recommended';
+    }
+
+    if (rating === 0) {
+      return 'Recommended';
+    }
+
+    if (rating === 1) {
+      return '🥟';
+    }
+
+    if (rating === 2) {
+      return '🥟🥟';
+    }
+
+    if (rating === 3) {
+      return '🥟🥟🥟';
+    }
+
+    return '';
+
+  }
+
+
+
+  /* =========================
+     SAFE TEXT FOR POPUPS
+     ========================= */
+
+  function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+
+  }
+
+
+
+  /* =========================
+     DUMPLING ICON
+     ========================= */
+
+  const dumplingIcon = L.divIcon({
+
+    className: '',
+
+    html: `
+      <div class="dumpling-marker">
+
+        <svg
+          viewBox="0 0 48 48"
+          aria-hidden="true"
+        >
+
+          <!-- dumpling body -->
+
+          <path
+            class="dumpling-body"
+            d="
+              M7 29
+              C9 20, 14 14, 24 11
+              C34 14, 39 20, 41 29
+              C37 37, 31 40, 24 40
+              C17 40, 11 37, 7 29
+              Z
+            "
+          />
+
+          <!-- pleats -->
+
+          <path
+            class="dumpling-pleat"
+            d="M14 22 C16 19, 18 18, 20 17"
+          />
+
+          <path
+            class="dumpling-pleat"
+            d="M19 18 C21 16, 23 15, 24 14"
+          />
+
+          <path
+            class="dumpling-pleat"
+            d="M24 14 C26 15, 28 16, 29 18"
+          />
+
+          <path
+            class="dumpling-pleat"
+            d="M29 18 C32 19, 34 21, 35 23"
+          />
+
+        </svg>
+
+      </div>
+    `,
+
+    iconSize: [42, 42],
+
+    iconAnchor: [21, 21],
+
+    popupAnchor: [0, -23]
+
+  });
+
+
+
+  /* =========================
+     ADD RESTAURANTS
+     ========================= */
+
+  const markers = [];
+
+
+  restaurants.forEach(function(restaurant) {
+
+    const marker = L.marker(
+      [
+        restaurant.lat,
+        restaurant.lng
+      ],
       {
-        const marker = L.marker([
-          {{ post.restaurant.lat }},
-          {{ post.restaurant.lng }}
-        ]).addTo(map);
-
-        marker.bindPopup(`
-          <div class="restaurant-popup">
-            <strong>{{ post.restaurant.name | escape }}</strong><br>
-            {{ post.restaurant.city | escape }},
-            {{ post.restaurant.country | escape }}
-
-            <div class="restaurant-rating">
-              {{ rating_text | strip }}
-            </div>
-
-            <a href="{{ post.url | relative_url }}">
-              Read review →
-            </a>
-          </div>
-        `);
-
-        markers.push(marker);
+        icon: dumplingIcon
       }
+    ).addTo(map);
 
-    {% endif %}
-  {% endfor %}
+
+    const popup = `
+
+      <div class="restaurant-popup">
+
+        <strong>
+          ${escapeHtml(restaurant.name)}
+        </strong>
+
+        <div class="restaurant-location">
+          ${escapeHtml(restaurant.city)},
+          ${escapeHtml(restaurant.country)}
+        </div>
+
+        <div class="restaurant-rating">
+          ${ratingLabel(restaurant.rating)}
+        </div>
+
+        <a href="${restaurant.url}">
+          Read review →
+        </a>
+
+      </div>
+
+    `;
+
+
+    marker.bindPopup(popup);
+
+
+    markers.push(marker);
+
+  });
+
+
+
+  /* =========================
+     INITIAL MAP POSITION
+     ========================= */
 
   if (markers.length === 1) {
-    map.setView(markers[0].getLatLng(), 15);
-  } else if (markers.length > 1) {
+
+    map.setView(
+      markers[0].getLatLng(),
+      15
+    );
+
+  }
+
+  else if (markers.length > 1) {
+
     const group = L.featureGroup(markers);
 
-    map.fitBounds(group.getBounds(), {
-      padding: [40, 40],
-      maxZoom: 15
-    });
-  } else {
-    map.setView([52.2297, 21.0122], 12);
+
+    map.fitBounds(
+      group.getBounds(),
+      {
+        padding: [40, 40],
+        maxZoom: 15
+      }
+    );
+
   }
+
+  else {
+
+    map.setView(
+      [52.2297, 21.0122],
+      12
+    );
+
+  }
+
+
+
+  /* =========================
+     LOCATE ME CONTROL
+     ========================= */
+
+  const LocateControl = L.Control.extend({
+
+    options: {
+      position: 'topleft'
+    },
+
+
+    onAdd: function() {
+
+      const container = L.DomUtil.create(
+        'div',
+        'leaflet-bar locate-control'
+      );
+
+
+      const button = L.DomUtil.create(
+        'button',
+        'locate-button',
+        container
+      );
+
+
+      button.type = 'button';
+
+      button.title = 'Show my location';
+
+      button.setAttribute(
+        'aria-label',
+        'Show my location'
+      );
+
+
+      /*
+       * Simple target / location SVG
+       */
+
+      button.innerHTML = `
+
+        <svg viewBox="0 0 24 24">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="5"
+          ></circle>
+
+          <path d="M12 2v4"></path>
+
+          <path d="M12 18v4"></path>
+
+          <path d="M2 12h4"></path>
+
+          <path d="M18 12h4"></path>
+
+        </svg>
+
+      `;
+
+
+      L.DomEvent.disableClickPropagation(container);
+
+      L.DomEvent.disableScrollPropagation(container);
+
+
+      L.DomEvent.on(
+        button,
+        'click',
+        function(event) {
+
+          L.DomEvent.preventDefault(event);
+
+
+          map.locate({
+
+            setView: true,
+
+            maxZoom: 16,
+
+            enableHighAccuracy: true
+
+          });
+
+        }
+      );
+
+
+      return container;
+
+    }
+
+  });
+
+
+  map.addControl(
+    new LocateControl()
+  );
+
+
+
+  /* =========================
+     USER LOCATION
+     ========================= */
+
+  let userLocationMarker = null;
+
+  let userAccuracyCircle = null;
+
+
+  map.on(
+    'locationfound',
+    function(event) {
+
+      if (userLocationMarker) {
+        map.removeLayer(userLocationMarker);
+      }
+
+
+      if (userAccuracyCircle) {
+        map.removeLayer(userAccuracyCircle);
+      }
+
+
+      userLocationMarker = L.circleMarker(
+        event.latlng,
+        {
+          radius: 8,
+
+          color: '#170D0A',
+
+          weight: 3,
+
+          fillColor: '#FFF1D6',
+
+          fillOpacity: 1
+        }
+      ).addTo(map);
+
+
+      userAccuracyCircle = L.circle(
+        event.latlng,
+        {
+          radius: event.accuracy,
+
+          color: '#170D0A',
+
+          weight: 1,
+
+          fillColor: '#E34234',
+
+          fillOpacity: 0.10
+        }
+      ).addTo(map);
+
+
+      userLocationMarker
+        .bindPopup(
+          '<div class="restaurant-popup"><strong>You are here</strong></div>'
+        )
+        .openPopup();
+
+    }
+  );
+
+
+
+  /* =========================
+     LOCATION ERROR
+     ========================= */
+
+  map.on(
+    'locationerror',
+    function(event) {
+
+      alert(
+        'Unable to find your location. ' +
+        event.message
+      );
+
+    }
+  );
+
 </script>
