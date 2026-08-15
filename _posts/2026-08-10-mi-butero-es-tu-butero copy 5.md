@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "mi butero es tu butero – Butero, Warsaw, Poland"
+title: "5mi butero es tu butero – Butero, Warsaw, Poland"
 description:
 categories: restaurants
 thumbnail: assets/images/20260810/IMG_20260808_222451156.jpg
