@@ -13,8 +13,8 @@ restaurant:
   address: "Bracka 3"
   city: "Warsaw"
   country: "Poland"
-  lat: 52.230621
-  lng: 21.015119
+  lat: 52.229904942846034
+  lng: 21.020043255043117
 
 visited: 2026-08-08
 ---
