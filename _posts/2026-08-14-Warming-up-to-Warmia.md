@@ -20,4 +20,6 @@ visited: 2026-08-14
 ---
 TBA
 
+rating: 🥟
+
 ![Welcoming ]({{ 'assets/images/20260814/menu.jpeg' | relative_url }})
